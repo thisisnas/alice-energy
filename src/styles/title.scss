@@ -1,0 +1,31 @@
+$colorBg: #6e78cf;
+$colorBgButton: #f5ba3c;
+$colorBgButtonHover: #e0b046;
+$colorText: white;
+$colorBorder: rgb(211, 208, 204);
+
+.title {
+  font-size: 1.5em;
+  text-align: center;
+  color: $colorText;
+  background-color: $colorBg;
+  padding: 75px 0px 75px 0px;
+  border-top: $colorBorder solid 1px;
+  border-bottom: $colorBorder solid 1px;
+  font-family: 'Montserrat', sans-serif;
+  div {
+    margin: 70px;
+    a {
+      border-radius: 50px;
+      font-size: 1.1em;
+      font-weight: bold;
+      text-decoration: none;
+      padding: 1% 2% 1% 2%;
+      color: rgb(24, 24, 24);
+      background-color: $colorBgButton;
+    }
+    a:hover {
+      background-color: $colorBgButtonHover;
+    }
+  }
+}

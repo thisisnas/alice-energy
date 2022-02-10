@@ -1,25 +1,25 @@
-import logo from './logo.svg';
-import './App.css';
+import logo from './logo.svg'
+import './App.scss'
+import {BrowserRouter as Router, Routes, Route} from 'react-router-dom'
+import About from './components/About'
+import Nav from './components/Nav'
+import Title from './components/content/Title'
+import Poll from './components/questions/Poll'
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+    <div className='App'>
+      <header className='App-header'>
+        <Router>
+          <Nav />
+          <Routes>
+            <Route exact path='/' element={<About />} />
+            <Route exact path='/poll' element={<Poll />} />
+          </Routes>
+        </Router>
       </header>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
