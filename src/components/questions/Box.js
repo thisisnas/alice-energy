@@ -1,42 +1,52 @@
-import React, {
-  useState,
-  useEffect,
-  forwardRef,
-  useImperativeHandle,
-} from 'react'
+import React, {Component, forwardRef, useImperativeHandle} from 'react'
 import {
   MdCheckBoxOutlineBlank as Blank,
   MdCheckBox as Checked,
 } from 'react-icons/md'
 
-const Box = forwardRef(({proposition, sendAnswer}, ref) => {
-  const [answer, SetAnswer] = useState('')
-  const [isChecked, setIsChecked] = useState(false)
+import '../../styles/questions/box.scss'
 
-  useImperativeHandle(
-    ref,
-    () => {
-      const setFalse = () => {
-        setIsChecked(false)
-      }
-    },
-    []
-  )
-
-  const handleClick = (e) => {
-    e.preventDefault()
-    setIsChecked(() => !isChecked)
-    sendAnswer(proposition)
+export class Box extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      answer: '',
+      isChecked: false,
+    }
+    this.handleClick = this.handleClick.bind(this)
   }
 
-  return (
-    <>
-      <div onClick={handleClick}>
-        {isChecked ? <Checked /> : <Blank />}
-        {proposition}
+  setFalse(result) {
+    console.log('false')
+    if (result != this.props.proposition) this.setState({isChecked: false})
+  }
+
+  sendAnswer = (answer) => {
+    return answer
+  }
+
+  handleClick = (e) => {
+    e.preventDefault()
+    this.setState({isChecked: !this.state.isChecked})
+    this.props.sendAnswer(this.props.proposition)
+  }
+
+  render() {
+    return (
+      <div onClick={this.handleClick} className='box'>
+        {this.props.proposition == '' ? (
+          <input type='text' className='textArea' />
+        ) : (
+          <>
+            <span className='checkBox'>
+              {this.state.isChecked ? <Checked /> : <Blank />}
+            </span>
+            <span className='proposition'>{this.props.proposition}</span>
+          </>
+        )}
       </div>
-    </>
-  )
-})
+    )
+  }
+}
 
 export default Box

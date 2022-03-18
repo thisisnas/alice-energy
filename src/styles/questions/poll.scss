@@ -1,0 +1,19 @@
+.container {
+  width: 60vw;
+  margin: auto;
+}
+
+.btn {
+  position: fixed;
+  background-color: rgb(0, 0, 0);
+  color: white;
+  padding: 1vh 2vw 1vh 2vw;
+  margin: 1vh 2vw 1vh 2vw;
+  border: none;
+  font-size: 1.1em;
+  border-radius: 3px;
+}
+
+.btn-suivant {
+  margin: 1vh 1vw 1vh 20vw;
+}

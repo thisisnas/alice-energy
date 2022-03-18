@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react'
 import Question from './Question'
+import '../../styles/questions/poll.scss'
 
 const Poll = () => {
   const [data, setData] = useState([
@@ -33,6 +34,7 @@ const Poll = () => {
   useEffect(() => {
     setResults(() => {
       data.map((item) => results.concat({question: item.inquest, result: ''}))
+      console.log(results)
     })
 
     return () => {
@@ -41,7 +43,7 @@ const Poll = () => {
   }, [])
 
   return (
-    <div>
+    <div className='container'>
       {React.Children.toArray(
         data.map((item) => {
           return <Question inquest={item.inquest} answers={item.answers} />
