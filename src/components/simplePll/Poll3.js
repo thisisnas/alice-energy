@@ -1,6 +1,9 @@
 import React, {useState, useEffect} from 'react'
 import Question2 from './Question2'
+import UserInformation from './UserInformation'
 import '../../styles/questions/poll.scss'
+
+import axios from 'axios'
 
 const Poll3 = () => {
   const [tab, setTab] = useState([
@@ -46,11 +49,23 @@ const Poll3 = () => {
     ],
     [
       {
+        inquest: "Montant annuel de l'energie?",
+        answers: [],
+        answer: '',
+      },
+      {
         inquest: "Coordonnee du gestionnaire de l'immeuble?",
         answers: [],
         answer: '',
       },
     ],
+    {
+      name: '',
+      surname: '',
+      address: '',
+      city: '',
+      phone: '',
+    },
   ]) /** tab is the structure having all the questions and answers of the poll */
 
   const [currentTab, setCurrentTab] = useState([])
@@ -71,126 +86,184 @@ const Poll3 = () => {
     }
   }, [])
 
+  /**-------------------------------------------------------------------------------------------------------- */
+
   /**
+   * ?function : getAnswer
    * When an answer is clicked by the user this update the currentTab is modified
    * @param {Array} reponse there is the answer and the position on currentTab t be modified
    * */
   const getAnswer = (response) => {
     if (response[0] === 0) {
-      console.log('inside')
       switch (response[1]) {
         case 'Maison':
-          console.log('maison here')
-          let tmp = [tab[0], ...tab[1]]
+          let tmp = [tab[0], ...tab[1], tab[3]]
           tmp[0].answer = 'Maison'
           tmp[response[0]].answer = response[1]
           setCurrentTab((t) => (t = tmp))
-          console.log(currentTab)
+
           break
         case 'Appartement':
-          console.log('appartement here')
-          let tmp2 = [tab[0], ...tab[2]]
+          let tmp2 = [tab[0], ...tab[2], tab[3]]
           tmp2[0].answer = 'Appartement'
           tmp2[response[0]].answer = response[1]
           setCurrentTab((t) => (t = tmp2))
-          console.log(currentTab)
+
           break
 
         default:
           console.log(response)
-          console.log('nothing here')
+
           break
       }
-
-      console.log('check answers')
-      console.log(answers)
-
-      console.log('1')
     } else {
       let tmp = []
       currentTab.map((el) => (tmp = [...tmp, el]))
-      // currentTab.forEach((el, iter) => {
-      //   tmp[iter].answer = el.answer
-      // })
       tmp[response[0]].answer = response[1]
 
       setCurrentTab(tmp)
-      console.log('2')
-      console.log(tab)
     }
   }
 
-  /**Is triggered when currentTab is modified */
+  /**-------------------------------------------------------------------------------------------------------- */
+
+  /**
+   * ? function : getInfo
+   * this function will select the las child of currentTab which
+   * are the informations about the user, it modify the info
+   * as the user is filling up the form.
+   * @param {Array} info which are the value modified by the user
+   */
+  const getInfo = (info) => {
+    let tmp = currentTab[currentTab.length - 1]
+    let tmp2 = [...currentTab]
+    tmp2.pop()
+    tmp[info[0]] = info[1]
+    tmp2 = [...tmp2, tmp]
+    setCurrentTab((t) => (t = tmp2))
+    setLoaded(Object.values(tmp).every((el) => el !== ''))
+    console.log('check tmp :')
+    console.log(loaded)
+  }
+
+  /**-------------------------------------------------------------------------------------------------------- */
+
+  /**Is triggered when currentTab is modified and update the array answers for the view*/
   useEffect(() => {
-    console.log('3')
     let tmp = []
 
     currentTab.forEach((el, iter) => {
-      tmp = [
-        ...tmp,
-        {
-          representation: (
-            <Question2
-              question={el.inquest}
-              answers={el.answers}
-              fetchAnswer={getAnswer}
-              iter={iter}
-              answer={el.answer}
-              isyNumber={onlyNumber}
-            />
-          ),
-        },
-      ]
+      if (typeof el.name == 'undefined') {
+        tmp = [
+          ...tmp,
+          {
+            representation: (
+              <Question2
+                question={el.inquest}
+                answers={el.answers}
+                fetchAnswer={getAnswer}
+                iter={iter}
+                answer={el.answer}
+                isyNumber={onlyNumber}
+              />
+            ),
+          },
+        ]
+      } else {
+        tmp = [
+          ...tmp,
+          {
+            representation: (
+              <UserInformation
+                name={el.name}
+                surname={el.surname}
+                address={el.address}
+                city={el.city}
+                phone={el.phone}
+                fetchInfo={getInfo}
+              />
+            ),
+          },
+        ]
+      }
     })
 
     setAnswers((ans) => (ans = tmp))
-
-    console.log(
-      ` on the use effect when surrent tab is modified the value of step is :  ${step}`
-    )
   }, [currentTab])
+
+  /**-------------------------------------------------------------------------------------------------------- */
+
+  //?OnSubmit
+
+  const onSubmit = async () => {
+    try {
+      const res = await axios.get('/save').then(() => {
+        console.log('the clicked as been done')
+      })
+      console.log(res)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  /**-------------------------------------------------------------------------------------------------------- */
 
   const scrollListener = (e) => {
     console.log('e.target.srollTop')
   }
 
+  /**-------------------------------------------------------------------------------------------------------- */
+
   const forward = () => {
-    console.log(` i forward :)  ${answers.length} and ${step}`)
     if (step < answers.length - 1) setStep((s) => (s = step + 1))
+    console.log(answers)
+    console.log(step, answers.length)
+    if (step === answers.length - 2) {
+      setLoaded(
+        Object.values(currentTab[currentTab.length - 1]).every(
+          (el) => el !== ''
+        )
+      )
+    }
   }
+
+  /**-------------------------------------------------------------------------------------------------------- */
 
   const backward = () => {
-    console.log(` i backward :)  ${answers.length} and ${step}`)
     if (step > 0) setStep(step - 1)
+    setLoaded(false)
   }
 
-  const reassignTab = (arr, answer) => {}
+  /**-------------------------------------------------------------------------------------------------------- */
 
   return (
     <section onScroll={scrollListener}>
-      {answers.length && answers[step].representation}
-      {step !== 0 && (
-        <button onClick={backward} className='btn'>
-          Precedent
-        </button>
-      )}
-      {step !== answers.length - 1 &&
-        (step > 0 ? (
-          <button onClick={forward} className='btn btn-suivant'>
-            Suivant
+      <div className='questions grid-container'>
+        <div>{answers.length && answers[step].representation}</div>
+        <div className='img'></div>
+      </div>
+      <div>
+        {step !== 0 && (
+          <button onClick={backward} className='btn'>
+            Precedent
           </button>
-        ) : (
-          <button onClick={forward} className='btn'>
-            Suivant
+        )}
+        {step !== answers.length - 1 &&
+          (step > 0 ? (
+            <button onClick={forward} className='btn btn-suivant'>
+              Suivant
+            </button>
+          ) : (
+            <button onClick={forward} className='btn'>
+              Suivant
+            </button>
+          ))}
+
+        {loaded && (
+          <button className='btn btn-suivant appear' onClick={onSubmit}>
+            Valider
           </button>
-        ))}
-      <div style={{padding: '20%'}}>
-        {currentTab.map((el) => (
-          <>
-            <li>{el.inquest}</li>
-            <li>{el.answer}</li>
-          </>
-        ))}
+        )}
       </div>
     </section>
   )

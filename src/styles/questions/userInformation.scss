@@ -1,0 +1,39 @@
+
+
+.container {
+  display: grid;
+  grid-auto-rows: 10vh;
+  grid-auto-columns: 20vw;
+  row-gap: 2vh;
+  width:40vw;
+
+}
+
+/*
+.container {
+  display: flex;
+  flex-direction: column;
+}
+
+
+label {
+  display: block;
+  order: 5;
+  margin-bottom: 3vh;
+}
+*/
+.container > label > div {
+  font-size: small;
+ 
+}
+
+.container > label > input {
+  width: 30vw;
+  font-size: 4vh;
+  border: none;
+  border-bottom: solid 2px #e74e3d;
+}
+
+.container > label > input:focus {
+  outline: none;
+}

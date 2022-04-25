@@ -17,21 +17,23 @@ $version2: (
 .sctn-qst {
   padding: 15vh 0vw 0vh 0vw;
   margin: 0vh 0vw 0vh 4vw;
-  transition: 3s;
+
 }
 
 .query {
   margin: 0vh 2vw 3.5vh 1vw;
   font-weight: 300;
   font-size: 1.6em;
+  
 }
 
 .inpt-text {
   height: 5vh;
-  width: 50vw;
+  /*width: 50vw;*/
   font-size: 4vh;
   border: none;
   border-bottom: solid 2px #e74e3d;
+  
 }
 
 .inpt-text:focus {
